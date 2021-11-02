@@ -1,6 +1,6 @@
 """Download medias from https://mitene.us/ or https://family-album.com/
 """
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 import argparse
 import glob
@@ -24,6 +24,7 @@ def main() -> None:
   )
 
   parser.add_argument("--destination-directory", default="out")
+  parser.add_argument("-p", "--password")
 
   args = parser.parse_args()
 
@@ -33,9 +34,33 @@ def main() -> None:
     os.unlink(tmp_file)
 
   with requests.Session() as session:
+
     page = 0
     while True:
       r = session.get(f"{args.album_url}?page={page}")
+
+      if page == 0 and 'Please enter your password' in r.text:
+        if not args.password:
+          print(
+              'Album is password protected, please specify password with --password',
+              file=sys.stderr)
+          sys.exit(1)
+        authenticity_token = r.text.split(
+            'name="authenticity_token" value="')[1].split('"')[0]
+        assert authenticity_token, "Could not parse authenticity token"
+        r = session.post(
+            f"{args.album_url}/login",
+            data={
+                'session[password]': args.password,
+                'authenticity_token': authenticity_token
+            },
+        )
+        if r.url.endswith('/login'):
+          print('Could not authenticate, maybe password is incorrect',
+                file=sys.stderr)
+          sys.exit(1)
+        continue
+
       page_text = r.text.split("//<![CDATA[\nwindow.gon={};gon.media="
                                )[1].split(";gon.familyUserIdToColorMap=")[0]
       data = json.loads(page_text)
