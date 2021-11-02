@@ -71,7 +71,7 @@ def main() -> None:
                 )
           os.rename(comment_filename + ".tmp", comment_filename)
 
-      print(f'processed page {page}')
+      print(f'Processed page {page}')
 
 
 if __name__ == '__main__':
