@@ -5,12 +5,8 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "mitene_download"
 requires-python = ">=3.6"
-dependencies = [
-    "aiohttp[speedups]",
-]
-classifiers = [
-    "License :: OSI Approved :: MIT License"
-]
+dependencies = ["aiohttp[speedups]"]
+classifiers = ["License :: OSI Approved :: MIT License"]
 readme = "README.md"
 dynamic = ["description", "version"]
 
@@ -26,6 +22,16 @@ name = "Jérome Perrin"
 [tool.yapf]
 based_on_style = "pep8"
 indent_width = 2
+
+[tool.pylint.messages_control]
+disable = "all"
+enable = [
+    "E",
+    "unused-variable",
+    "unused-import",
+    "unreachable",
+    "duplicate-key",
+]
 
 [project.scripts]
 mitene_download = "mitene_download:main"
