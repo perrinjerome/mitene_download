@@ -6,7 +6,7 @@ build-backend = "flit_core.buildapi"
 name = "mitene_download"
 requires-python = ">=3.6"
 dependencies = [
-    "requests",
+    "aiohttp[speedups]",
 ]
 classifiers = [
     "License :: OSI Approved :: MIT License"
