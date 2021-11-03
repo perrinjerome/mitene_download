@@ -26,3 +26,6 @@ name = "Jérome Perrin"
 [tool.yapf]
 based_on_style = "pep8"
 indent_width = 2
+
+[project.scripts]
+mitene_download = "mitene_download:main"
