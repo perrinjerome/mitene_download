@@ -36,11 +36,11 @@ def main() -> None:
 
   with requests.Session() as session:
 
-    page = 0
+    page = 1
     while True:
       r = session.get(f"{args.album_url}?page={page}")
 
-      if page == 0 and 'Please enter your password' in r.text:
+      if page == 1 and 'Please enter your password' in r.text:
         if not args.password:
           print(
               'Album is password protected, please specify password with --password',
