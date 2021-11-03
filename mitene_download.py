@@ -68,10 +68,10 @@ def main() -> None:
       page += 1
       if not data["mediaFiles"]:
         break
-
       for media in data["mediaFiles"]:
-        expiringUrl = media.get("expiringVideoUrl", media["expiringUrl"])
-        filename = urllib.parse.urlparse(expiringUrl).path.split("/")[-1]
+        filename = urllib.parse.urlparse(
+            media.get("expiringVideoUrl",
+                      media["expiringUrl"])).path.split("/")[-1]
         filename = f'{media["tookAt"]}-{filename}'
         destination_filename = os.path.join(
             args.destination_directory,
@@ -80,7 +80,8 @@ def main() -> None:
 
         if not os.path.exists(destination_filename):
           with open(destination_filename + ".tmp", "wb") as f:
-            r = session.get(expiringUrl)
+            r = session.get(
+                f"{args.album_url}/media_files/{media['uuid']}/download")
             r.raise_for_status()
             for chunk in r:
               f.write(chunk)
