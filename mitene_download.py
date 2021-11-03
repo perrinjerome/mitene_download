@@ -9,16 +9,17 @@ import json
 import os
 import sys
 import urllib.parse
+from typing import Awaitable
 
 import aiohttp
 
 
-async def gather_with_concurrency(n, *tasks):
+async def gather_with_concurrency(n: int, *tasks: Awaitable[None]) -> None:
   """Like asyncio.gather but limit the number of concurent tasks.
   """
   semaphore = asyncio.Semaphore(n)
 
-  async def sem_task(task):
+  async def sem_task(task: Awaitable[None]) -> None:
     async with semaphore:
       await task
 
