@@ -13,7 +13,7 @@ import requests
 
 
 def main() -> None:
-  parser = argparse.ArgumentParser(__doc__)
+  parser = argparse.ArgumentParser(prog='mitene_download', description=__doc__)
   parser.add_argument(
       "album_url",
       help="""
