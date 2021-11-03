@@ -25,6 +25,7 @@ def main() -> None:
 
   parser.add_argument("--destination-directory", default="out")
   parser.add_argument("-p", "--password")
+  parser.add_argument("-v", "--verbose", action="store_true")
 
   args = parser.parse_args()
 
@@ -79,6 +80,8 @@ def main() -> None:
         )
 
         if not os.path.exists(destination_filename):
+          if args.verbose:
+            print(f"Downloading {media['uuid']} ⏳", flush=True)
           with open(destination_filename + ".tmp", "wb") as f:
             r = session.get(
                 f"{args.album_url}/media_files/{media['uuid']}/download")
@@ -86,6 +89,8 @@ def main() -> None:
             for chunk in r:
               f.write(chunk)
           os.rename(destination_filename + ".tmp", destination_filename)
+        elif args.verbose:
+          print(f"{media['uuid']} already downloaded ✔️", flush=True)
 
         if media["comments"]:
           comment_filename = os.path.splitext(destination_filename)[0] + ".md"
