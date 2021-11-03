@@ -13,6 +13,39 @@ import urllib.parse
 import aiohttp
 
 
+async def gather_with_concurrency(n, *tasks):
+  """Like asyncio.gather but limit the number of concurent tasks.
+  """
+  semaphore = asyncio.Semaphore(n)
+
+  async def sem_task(task):
+    async with semaphore:
+      await task
+
+  await asyncio.gather(*(sem_task(task) for task in tasks))
+
+
+async def download_media(
+    session: aiohttp.ClientSession,
+    url: str,
+    destination_filename: str,
+    media_name: str,
+    verbose: bool,
+) -> None:
+  """Download one media from URL"""
+  if not os.path.exists(destination_filename):
+    if verbose:
+      print(f"Downloading {media_name} ⏳", flush=True)
+    with open(destination_filename + ".tmp", "wb") as f:
+      r = await session.get(url)
+      r.raise_for_status()
+      async for chunk in r.content.iter_chunked(1024):
+        f.write(chunk)
+    os.rename(destination_filename + ".tmp", destination_filename)
+  elif verbose:
+    print(f"{media_name} already downloaded ✔️", flush=True)
+
+
 async def main() -> None:
   parser = argparse.ArgumentParser(prog='mitene_download', description=__doc__)
   parser.add_argument(
@@ -35,6 +68,7 @@ async def main() -> None:
   for tmp_file in glob.glob(os.path.join(args.destination_directory, "*.tmp")):
     os.unlink(tmp_file)
 
+  download_coroutines = []
   async with aiohttp.ClientSession() as session:
 
     page = 1
@@ -80,18 +114,14 @@ async def main() -> None:
             filename,
         )
 
-        if not os.path.exists(destination_filename):
-          if args.verbose:
-            print(f"Downloading {media['uuid']} ⏳", flush=True)
-          with open(destination_filename + ".tmp", "wb") as f:
-            r = await session.get(
-                f"{args.album_url}/media_files/{media['uuid']}/download")
-            r.raise_for_status()
-            async for chunk in r.content.iter_chunked(1024):
-              f.write(chunk)
-          os.rename(destination_filename + ".tmp", destination_filename)
-        elif args.verbose:
-          print(f"{media['uuid']} already downloaded ✔️", flush=True)
+        download_coroutines.append(
+            download_media(
+                session,
+                f"{args.album_url}/media_files/{media['uuid']}/download",
+                destination_filename,
+                media['uuid'],
+                args.verbose,
+            ))
 
         if media["comments"]:
           comment_filename = os.path.splitext(destination_filename)[0] + ".md"
@@ -103,8 +133,8 @@ async def main() -> None:
                 )
           os.rename(comment_filename + ".tmp", comment_filename)
 
-      print(f'Processed page {page}')
-    await session.close()
+    await gather_with_concurrency(4, *download_coroutines)
+  await session.close()
 
 
 if __name__ == '__main__':
