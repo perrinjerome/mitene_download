@@ -1,6 +1,6 @@
 """Download medias from https://mitene.us/ or https://family-album.com/
 """
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 import argparse
 import asyncio
@@ -47,7 +47,7 @@ async def download_media(
     print(f"{media_name} already downloaded ✔️", flush=True)
 
 
-async def main() -> None:
+async def async_main() -> None:
   parser = argparse.ArgumentParser(prog='mitene_download', description=__doc__)
   parser.add_argument(
       "album_url",
@@ -138,6 +138,10 @@ async def main() -> None:
   await session.close()
 
 
-if __name__ == '__main__':
+def main() -> None:
   loop = asyncio.get_event_loop()
-  loop.run_until_complete(main())
+  loop.run_until_complete(async_main())
+
+
+if __name__ == '__main__':
+  main()
