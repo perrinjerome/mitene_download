@@ -33,5 +33,20 @@ enable = [
     "duplicate-key",
 ]
 
+[tool.tox]
+legacy_tox_ini = """
+    [tox]
+    isolated_build = True
+    package = wheel
+    env_list =
+        py312
+        py311
+        py310
+        py39
+
+    [testenv]
+    commands = mitene_download --help
+"""
+
 [project.scripts]
 mitene_download = "mitene_download:main"
