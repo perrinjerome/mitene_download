@@ -4,6 +4,7 @@ __version__ = '0.1.1'
 
 import argparse
 import asyncio
+import datetime
 import glob
 import json
 import mimetypes
@@ -71,7 +72,8 @@ async def async_main() -> None:
     os.unlink(tmp_file)
 
   download_coroutines = []
-  async with aiohttp.ClientSession() as session:
+  async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(
+      total=datetime.timedelta(minutes=30).total_seconds())) as session:
 
     page = 1
     while True:
