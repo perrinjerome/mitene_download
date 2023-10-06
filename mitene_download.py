@@ -6,6 +6,7 @@ import argparse
 import asyncio
 import glob
 import json
+import mimetypes
 import os
 import sys
 import urllib.parse
@@ -110,6 +111,8 @@ async def async_main() -> None:
             media.get("expiringVideoUrl",
                       media["expiringUrl"])).path.split("/")[-1]
         filename = f'{media["tookAt"]}-{filename}'
+        if not os.path.splitext(filename)[1]:
+          filename = filename + mimetypes.guess_extension(media['contentType'])
         destination_filename = os.path.join(
             args.destination_directory,
             filename,
