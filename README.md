@@ -17,6 +17,11 @@ Download media from [Mitene](https://mitene.us/) & [Family Album](https://family
 - Clone the git repo or download the zip.
 - pip install mitene_download in command prompt or terminal.
     
+## Usage
+
+- python mitene_download.py <INSERT_URL>
+
+
 ## Features
 
 - Saving comments
