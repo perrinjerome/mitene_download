@@ -1,5 +1,5 @@
 
-# Mitene & Family-Album Downloader 2
+# Mitene & Family-Album Downloader 2.1
 
 Download media from [Mitene](https://mitene.us/) & [Family Album](https://family-album.com/). This script allows you to download photos, videos, and comments from the specified album URL and keep them stored locally on your machine.
 
