@@ -9,7 +9,7 @@ Download media from [Mitene](https://mitene.us/) & [Family Album](https://family
 
 ![mitene downloader-min](https://github.com/suasive93/mitene_download_2/assets/20932109/b280a991-3a8b-447b-aa3e-1ae0ab5aa71e)
 ## Requirements
-- Python 3.8.5, 3.10, or 3.11
+- Python 3.8.5
 
 ## Installation
 
