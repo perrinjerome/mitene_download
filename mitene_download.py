@@ -1,15 +1,17 @@
+__version__ = '0.2.1'
+
 import argparse
 import asyncio
-import glob
 import json
 import os
 import sys
 import urllib.parse
 import mimetypes
 from typing import Awaitable
-
-import aiohttp
 from tqdm import tqdm
+import aiohttp
+
+comments_saved_counter = 0
 
 class TqdmUpTo(tqdm):
     def update_to(self, b=1, bsize=1, tsize=None):
@@ -23,12 +25,6 @@ async def gather_with_concurrency(n: int, *tasks: Awaitable[None]) -> None:
         async with semaphore:
             await task
     await asyncio.gather(*(sem_task(task) for task in tasks))
-
-def handle_retry_attempt(attempt, max_retries, media_name):
-    if attempt < max_retries - 1:
-        print(f"Retry {attempt + 1} for {media_name} due to ClientPayloadError")
-    else:
-        print(f"Failed to download {media_name} after {max_retries} attempts due to ClientPayloadError")
 
 async def download_media(session: aiohttp.ClientSession, url: str, destination_filename: str, media_name: str, verbose: bool, current_index: int, total_media: int, max_retries: int = 3) -> None:
     for attempt in range(max_retries):
@@ -53,10 +49,15 @@ async def download_media(session: aiohttp.ClientSession, url: str, destination_f
                 print(f"{media_name} already downloaded.")
             break  
         except aiohttp.ClientPayloadError:
-            handle_retry_attempt(attempt, max_retries, media_name)
+            if attempt < max_retries - 1:
+                print(f"Retry {attempt + 1} for {media_name} due to ClientPayloadError")
+                continue  
+            else:
+                print(f"Failed to download {media_name} after {max_retries} attempts due to ClientPayloadError")
+                break
 
-async def async_main(concurrency: int = 4) -> int:
-    comments_saved_counter = 0
+async def async_main() -> None:
+    global comments_saved_counter
 
     parser = argparse.ArgumentParser(prog='mitene_download')
     parser.add_argument("album_url")
@@ -67,9 +68,6 @@ async def async_main(concurrency: int = 4) -> int:
 
     os.makedirs("comments", exist_ok=True)
     os.makedirs("downloaded", exist_ok=True)
-
-    for tmp_file in glob.glob(os.path.join("comments", "*.tmp")):
-        os.unlink(tmp_file)
 
     download_coroutines = []
     async with aiohttp.ClientSession() as session:
@@ -110,16 +108,16 @@ async def async_main(concurrency: int = 4) -> int:
                             if not comment["isDeleted"]:
                                 comment_f.write(f'**{comment["user"]["nickname"]}**: {comment["body"]}\n\n')
                             comments_saved_counter += 1
+
                         print(f"\rComments saved: {comments_saved_counter}", end="")
 
-        await gather_with_concurrency(concurrency, *download_coroutines)
+        await gather_with_concurrency(4, *download_coroutines)
 
-    return comments_saved_counter
+    await session.close()
 
 def main() -> None:
     loop = asyncio.get_event_loop()
-    comments_saved_counter = loop.run_until_complete(async_main(concurrency=4))
-    print(f"Total comments saved: {comments_saved_counter}")
+    loop.run_until_complete(async_main())
 
 if __name__ == '__main__':
     try:
