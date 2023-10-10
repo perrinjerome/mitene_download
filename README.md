@@ -1,7 +1,7 @@
 
 # Mitene & Family-Album Downloader 2
 
-Download media from [Mitene](https://mitene.us/) & [Family Album](https://family-album.com/) to keep as a local backup. This script allows you to download photos, videos, and comments from the specified album URL and keep them stored locally on your machine.
+Download media from [Mitene](https://mitene.us/) & [Family Album](https://family-album.com/). This script allows you to download photos, videos, and comments from the specified album URL and keep them stored locally on your machine.
 
 
 ## Demo
