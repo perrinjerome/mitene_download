@@ -4,20 +4,30 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "mitene_download"
+version = "0.2.1"  # Added based on __version__
 requires-python = ">=3.6"
-dependencies = ["aiohttp[speedups]"]
+dependencies = [
+    "aiohttp[speedups]",
+    "argparse",     # Added based on imports in your code
+    "tqdm",
+    "mimetypes",
+    "urllib"
+]
 classifiers = ["License :: OSI Approved :: MIT License"]
 readme = "README.md"
 dynamic = ["description", "version"]
 
 [project.license]
-file = "LICENCE"
+file = "LICENSE"  # Corrected the spelling
 
 [project.urls]
 Source = "https://github.com/perrinjerome/mitene_download"
 
 [[project.authors]]
 name = "Jérome Perrin"
+
+[[project.authors]]
+name = "Suasive93"
 
 [tool.yapf]
 based_on_style = "pep8"
