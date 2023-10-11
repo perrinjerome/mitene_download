@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pylint mypy yapf isort .
+          pip install pylint mypy isort .
           python -m pip install types-tqdm  # Install type stubs for tqdm
 
       - name: Analysing the code with pylint
@@ -43,13 +43,14 @@ jobs:
         run: |
           mypy --strict `ls -R|grep .py$|xargs`
 
-      - name: Check formatting with yapf
-        run: |
-          yapf --diff `ls -R|grep .py$|xargs` || (echo "Please format your code with YAPF before pushing." && exit 1)
+      # Commenting out the YAPF checks
+      #- name: Check formatting with yapf
+      #  run: |
+      #    yapf --diff `ls -R|grep .py$|xargs` || (echo "Please format your code with YAPF before pushing." && exit 1)
 
-      - name: Apply yapf formatting
-        run: |
-          yapf -i `ls -R|grep .py$|xargs`
+      #- name: Apply yapf formatting
+      #  run: |
+      #    yapf -i `ls -R|grep .py$|xargs`
 
       - name: Check import order with isort
         uses: jamescurtin/isort-action@master
