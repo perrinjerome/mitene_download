@@ -20,7 +20,7 @@ import aiohttp
 comments_saved_counter = 0
 
 class TqdmUpTo(tqdm):
-    def update_to(self, b=1, bsize=1, tsize=None):
+    def update_to(self, b: int = 1, bsize: int = 1, tsize: Optional[int] = None) -> None:
         if tsize is not None:
             self.total = tsize
         self.update(b * bsize - self.n)
@@ -41,7 +41,6 @@ async def download_media(session: aiohttp.ClientSession, url: str, destination_f
                     content_type = r.headers.get('Content-Type', '')
                     file_extension = mimetypes.guess_extension(content_type)
                     
-                    # Avoid double extension
                     if file_extension and not destination_filename.endswith(file_extension) and not (destination_filename.endswith('.jpg') and file_extension == '.jpeg'):
                         destination_filename += file_extension
                     
@@ -107,18 +106,18 @@ async def async_main() -> None:
                 filename = f'{media["tookAt"].replace(":", "_")}-{filename}'
                 destination_filename = os.path.join("downloaded", filename)
 
-                # Check if media is already downloaded
+                
                 media_downloaded = os.path.exists(destination_filename)
                 
-                # If not, initiate downloading
+                
                 if not media_downloaded:
                     download_coroutines.append(download_media(session, f"{args.album_url}/media_files/{media['uuid']}/download", destination_filename, media['uuid'], args.verbose, index+1, len(data["mediaFiles"])))
                 
-                # For comments, only proceed if the comment file doesn't already exist
+             
                 if media["comments"]:
                     comment_filename = os.path.join("comments", os.path.splitext(filename)[0] + ".md")
                     comment_filename = comment_filename.replace(':', '_')
-                    if not os.path.exists(comment_filename):  # Check if comments file already exists
+                    if not os.path.exists(comment_filename):  
                         with open(comment_filename, "w", encoding='utf-8') as comment_f:
                             for comment in media["comments"]:
                                 if not comment["isDeleted"]:
