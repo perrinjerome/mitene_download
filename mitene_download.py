@@ -1,3 +1,10 @@
+
+"""
+mitene_download.py: 
+A script to download media and comments from mitene album URLs. It handles pagination, 
+concurrent downloads, and supports password-protected albums.
+"""
+
 __version__ = '0.2.1'
 
 import argparse
@@ -30,21 +37,24 @@ async def download_media(session: aiohttp.ClientSession, url: str, destination_f
     for attempt in range(max_retries):
         try:
             if not os.path.exists(destination_filename):
-                r = await session.get(url, timeout=600)
-                r.raise_for_status()
-                content_type = r.headers.get('Content-Type', '')
-                file_extension = mimetypes.guess_extension(content_type)
-                if file_extension and not destination_filename.endswith(file_extension):
-                    destination_filename += file_extension
-                with open(destination_filename, "wb") as f:
-                    total_size = int(r.headers.get('content-length', 0))
-                    with TqdmUpTo(unit='B', unit_scale=True, unit_divisor=1024, total=total_size,
-                                  desc=f"Downloading {current_index} of {total_media}",
-                                  leave=False, mininterval=0.1, ncols=100, 
-                                  bar_format='{desc}: [{bar}] {percentage:3.0f}% - {n_fmt}/{total_fmt}') as pbar:
-                        async for chunk in r.content.iter_chunked(1024):
-                            f.write(chunk)
-                            pbar.update(len(chunk))
+                async with session.get(url, timeout=600) as r:
+                    r.raise_for_status()
+                    content_type = r.headers.get('Content-Type', '')
+                    file_extension = mimetypes.guess_extension(content_type)
+                    
+                    # Avoid double extension
+                    if file_extension and not destination_filename.endswith(file_extension) and not (destination_filename.endswith('.jpg') and file_extension == '.jpeg'):
+                        destination_filename += file_extension
+                    
+                    with open(destination_filename, "wb") as f:
+                        total_size = int(r.headers.get('content-length', 0))
+                        with TqdmUpTo(unit='B', unit_scale=True, unit_divisor=1024, total=total_size,
+                                      desc=f"Downloading {current_index} of {total_media}",
+                                      leave=False, mininterval=0.1, ncols=100, 
+                                      bar_format='{desc}: [{bar}] {percentage:3.0f}% - {n_fmt}/{total_fmt}') as pbar:
+                            async for chunk in r.content.iter_chunked(1024):
+                                f.write(chunk)
+                                pbar.update(len(chunk))
             elif verbose:
                 print(f"{media_name} already downloaded.")
             break  
@@ -97,23 +107,29 @@ async def async_main() -> None:
                 filename = urllib.parse.urlparse(media.get("expiringVideoUrl", media["expiringUrl"])).path.split("/")[-1]
                 filename = f'{media["tookAt"].replace(":", "_")}-{filename}'
                 destination_filename = os.path.join("downloaded", filename)
-                download_coroutines.append(download_media(session, f"{args.album_url}/media_files/{media['uuid']}/download", destination_filename, media['uuid'], args.verbose, index+1, len(data["mediaFiles"])))
 
+                # Check if media is already downloaded
+                media_downloaded = os.path.exists(destination_filename)
+                
+                # If not, initiate downloading
+                if not media_downloaded:
+                    download_coroutines.append(download_media(session, f"{args.album_url}/media_files/{media['uuid']}/download", destination_filename, media['uuid'], args.verbose, index+1, len(data["mediaFiles"])))
+                
+                # For comments, only proceed if the comment file doesn't already exist
                 if media["comments"]:
                     comment_filename = os.path.join("comments", os.path.splitext(filename)[0] + ".md")
                     comment_filename = comment_filename.replace(':', '_')
-                    with open(comment_filename, "w", encoding='utf-8') as comment_f:
-                        total_comments = len(media["comments"])
-                        for comment in media["comments"]:
-                            if not comment["isDeleted"]:
-                                comment_f.write(f'**{comment["user"]["nickname"]}**: {comment["body"]}\n\n')
+                    if not os.path.exists(comment_filename):  # Check if comments file already exists
+                        with open(comment_filename, "w", encoding='utf-8') as comment_f:
+                            total_comments = len(media["comments"])
+                            for comment in media["comments"]:
+                                if not comment["isDeleted"]:
+                                    comment_f.write(f'**{comment["user"]["nickname"]}**: {comment["body"]}\n\n')
                             comments_saved_counter += 1
-
-                        print(f"\rComments saved: {comments_saved_counter}", end="")
+                            print(f"\rComments saved: {comments_saved_counter}", end="")
 
         await gather_with_concurrency(4, *download_coroutines)
-
-    await session.close()
+        await session.close()
 
 def main() -> None:
     loop = asyncio.get_event_loop()
