@@ -9,8 +9,7 @@ requires-python = ">=3.6"
 dependencies  = [
     "aiohttp[speedups]",
     "argparse",     
-    "tqdm",
-    "urllib"
+    "tqdm"
 ]
 classifiers = ["License :: OSI Approved :: MIT License"]
 readme = "README.md"
