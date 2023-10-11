@@ -35,13 +35,14 @@ From mitene app, invite a family member for the web version and copy the URL
 
 ## Changelog
 
-- Added a timeout option.
-- Changed the layout of the code to display cleaner such as, "Comments being saved" and "progress bar for downloads".
+- Added and increased a timeout option.
+- Changed the layout of the code to display cleaner such as, "Comments saved" and "progress bar for downloads".
 - Optimized the code for cleaner operation, easier to read.
 - Removed the .tmp file writing, and made it to write files directly. 
 - Added the ability to write video media files extension (.mp4) previously not able in version 1.
 - Better network handling if lost connection.
-- Better exiting the program without causing errors. 
+- Better exiting the program without causing errors.
+- Added the ability to pre-check local files before downloading the same files. 
 
 
 ## Authors
