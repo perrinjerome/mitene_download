@@ -1,5 +1,5 @@
 
-# Mitene & Family-Album Downloader 2.2
+# Mitene & Family-Album Downloader 2.3
 
 Download media from [Mitene](https://mitene.us/) & [Family Album](https://family-album.com/). This script allows you to download photos, videos, and comments from the specified album URL and keep them stored locally on your machine.
 
@@ -9,7 +9,7 @@ Download media from [Mitene](https://mitene.us/) & [Family Album](https://family
 
 ![mitene downloader-min](https://github.com/suasive93/mitene_download_2/assets/20932109/b280a991-3a8b-447b-aa3e-1ae0ab5aa71e)
 ## Requirements
-- Python 3.8.5
+- Python 3.8.5 and up.
 
 ## Installation
 
