@@ -1,4 +1,3 @@
-
 """
 mitene_download.py: 
 A script to download media and comments from mitene album URLs. It handles pagination, 
@@ -121,7 +120,6 @@ async def async_main() -> None:
                     comment_filename = comment_filename.replace(':', '_')
                     if not os.path.exists(comment_filename):  # Check if comments file already exists
                         with open(comment_filename, "w", encoding='utf-8') as comment_f:
-                            total_comments = len(media["comments"])
                             for comment in media["comments"]:
                                 if not comment["isDeleted"]:
                                     comment_f.write(f'**{comment["user"]["nickname"]}**: {comment["body"]}\n\n')
