@@ -28,9 +28,8 @@ jobs:
         python-version: '3.x'
     - name: Install dependencies
       run: |
-        pip install tqdm
         python -m pip install --upgrade pip
-        pip install build
+        pip install tqdm types-tqdm build
     - name: Build package
       run: python -m build
     - name: Publish package
