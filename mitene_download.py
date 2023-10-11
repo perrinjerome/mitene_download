@@ -13,13 +13,15 @@ import os
 import sys
 import urllib.parse
 import mimetypes
-from typing import Awaitable, Optional 
+from typing import Awaitable, Optional, TypeVar 
 from tqdm import tqdm
 import aiohttp
 
+T = TypeVar("T", bound=int)
+
 comments_saved_counter = 0
 
-class TqdmUpTo(tqdm):
+class TqdmUpTo(tqdm[T]):
     def update_to(self, b: int = 1, bsize: int = 1, tsize: Optional[int] = None) -> None:
         if tsize is not None:
             self.total = tsize
