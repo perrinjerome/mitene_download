@@ -14,7 +14,7 @@ jobs:
           - "3.11"
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -38,14 +38,14 @@ jobs:
       - name: Analysing the code with pylint
         run: |
           pylint `ls -R|grep .py$|xargs`
-        
+
       - name: Analysing the code with mypy
         run: |
           mypy --strict `ls -R|grep .py$|xargs`
 
       - name: Check formatting with yapf
         run: |
-          yapf --diff `ls -R|grep .py$|xargs`
+          yapf --diff `ls -R|grep .py$|xargs` || (echo "Please format your code with YAPF before pushing." && exit 1)
 
       - name: Apply yapf formatting
         run: |
