@@ -19,7 +19,7 @@ import aiohttp
 
 comments_saved_counter = 0
 
-class TqdmUpTo(tqdm):
+class TqdmUpTo(tqdm[str]):
     def update_to(self, b: int = 1, bsize: int = 1, tsize: Optional[int] = None) -> None:
         if tsize is not None:
             self.total = tsize
