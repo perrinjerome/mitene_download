@@ -52,5 +52,6 @@ jobs:
       #  run: |
       #    yapf -i `ls -R|grep .py$|xargs`
 
-      - name: Check import order with isort
-        uses: jamescurtin/isort-action@master
+      - name: Apply isort formatting
+        run: |
+          isort `ls -R|grep .py$|xargs`
