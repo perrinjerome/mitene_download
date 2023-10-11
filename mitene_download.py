@@ -13,7 +13,7 @@ import os
 import sys
 import urllib.parse
 import mimetypes
-from typing import Awaitable
+from typing import Awaitable, Optional 
 from tqdm import tqdm
 import aiohttp
 
