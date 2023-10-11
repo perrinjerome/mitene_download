@@ -61,6 +61,7 @@ async def download_media(session: aiohttp.ClientSession, url: str, destination_f
                             pbar.update(len(chunk))
             break
         except (aiohttp.ClientPayloadError, aiohttp.ClientError) as e:
+            print(f"Error occurred: {e}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(5)
                 continue
