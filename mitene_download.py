@@ -4,7 +4,7 @@ A script to download media and comments from mitene album URLs. It handles pagin
 concurrent downloads, and supports password-protected albums.
 """
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 import argparse
 import asyncio
