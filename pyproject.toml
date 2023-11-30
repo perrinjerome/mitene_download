@@ -10,7 +10,7 @@ dependencies  = [
     "aiohttp[speedups]",
     "argparse",
     "tqdm",
-    "aiofiles" # Add aiofiles dependency here
+    "aiofiles"
 ]
 classifiers = ["License :: OSI Approved :: MIT License"]
 readme = "README.md"
@@ -20,7 +20,7 @@ dynamic = ["description"]
 file = "LICENSE"  
 
 [project.urls]
-Source = "https://github.com/suasive93/mitene_download_2.1"
+Source = "https://github.com/suasive93/mitene_download_4.0"
 
 [[project.authors]]
 name = "Jérome Perrin"
