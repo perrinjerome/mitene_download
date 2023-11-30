@@ -1,11 +1,9 @@
 
-# Mitene & Family-Album Downloader 2.3
+# Mitene & Family-Album Downloader 4.0
 
 Download media from [Mitene](https://mitene.us/) & [Family Album](https://family-album.com/). This script allows you to download photos, videos, and comments from the specified album URL and keep them stored locally on your machine.
 
-
 ## Demo
-
 
 ![mitene downloader-min](https://github.com/suasive93/mitene_download_2/assets/20932109/b280a991-3a8b-447b-aa3e-1ae0ab5aa71e)
 ## Requirements
@@ -24,26 +22,21 @@ From mitene app, invite a family member for the web version and copy the URL
 - python mitene_download.py <INSERT_URL>
 - python mitene_download.py <INSERT_URL> --password <INSERT_PASSWORD>
 
-
-
 ## Features
 
-- Saving comments
+- Saving comments and appending videos. 
 - Cross platform
-- Organizes comments into the comments folder, and the media into downloads.
+- Organizes files to their corresponding types/folders, comments, photos, and videos. 
 
+## Changelog 4.0
 
-## Changelog
-
-- Added and increased a timeout option.
-- Changed the layout of the code to display cleaner such as, "Comments saved" and "progress bar for downloads".
-- Optimized the code for cleaner operation, easier to read.
-- Removed the .tmp file writing, and made it to write files directly. 
-- Added the ability to write video media files extension (.mp4) previously not able in version 1.
-- Better network handling if lost connection.
-- Better exiting the program without causing errors.
-- Added the ability to pre-check local files before downloading the same files. 
-
+- Initial implementation of the asynchronous media downloader.
+- Database integration for storing and retrieving album URLs.
+- Command-line interface for user interaction to manage album URLs and initiate downloads.
+- Asynchronous download capabilities with progress tracking and error handling.
+- Utility functions for checksum calculation and file backup.
+- Graceful handling of KeyboardInterrupt (Ctrl+C) for safe script termination.
+- A comprehensive logging system for tracking actions and errors.
 
 ## Authors
 
