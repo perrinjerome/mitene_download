@@ -17,9 +17,8 @@ Download media from [Mitene](https://mitene.us/) & [Family Album](https://family
     
 ## Usage
 
-To use, invite a family member to the Mitene web version and copy the provided URL (e.g., https://mitene.us/f/abcd123456).
-- python mitene_download.py <INSERT_URL>
-- python mitene_download.py <INSERT_URL> --password <INSERT_PASSWORD>
+To use, invite a family member to the Mitene web version & copy the provided URL (e.g., https://mitene.us/f/abcd123456).
+- python downloader.py
 
 ## Features
 
