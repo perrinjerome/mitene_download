@@ -347,16 +347,16 @@ def main() -> None:
             for index, url in enumerate(album_urls, start=1):
                 print(f"{index}: {url}")
 
-            print(
-                "Enter 'a' to add a new URL or 'd' followed by the number to delete (e.g., 'd3')."
-            )
+            print("Enter 'a' to add a new URL or 'd' followed by the number to delete (e.g., 'd3').")
             print("Enter 'x' to exit.")
             selection = input("Your choice: ").strip().lower()
 
-            if selection == "a":
+            if selection.isdigit() and 1 <= int(selection) <= len(album_urls):
+                album_url = album_urls[int(selection) - 1]
+            elif selection == 'a':
                 album_url = input("Enter a new album URL: ")
                 save_album_url(album_url)
-            elif selection.startswith("d") and selection[1:].isdigit():
+            elif selection.startswith('d') and selection[1:].isdigit():
                 index_to_delete = int(selection[1:])
                 if 1 <= index_to_delete <= len(album_urls):
                     delete_album_url(album_urls[index_to_delete - 1])
@@ -364,7 +364,7 @@ def main() -> None:
                 else:
                     print("Invalid index. Please try again.")
                     continue
-            elif selection == "x":
+            elif selection == 'x':
                 break
             else:
                 print("Invalid input. Please try again.")
@@ -373,6 +373,7 @@ def main() -> None:
             print("No URLs saved. Please add a URL.")
             album_url = input("Enter a new album URL: ")
             save_album_url(album_url)
+
 
         if "album_url" in locals():
             if input("Does the album have a password? (y/n): ").strip().lower() == "y":
