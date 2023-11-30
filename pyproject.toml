@@ -58,4 +58,4 @@ legacy_tox_ini = """
 """
 
 [project.scripts]
-mitene_download = "mitene_download:main"
+downloader = "downloader:main"
