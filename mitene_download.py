@@ -1,3 +1,7 @@
+"""
+This module provides functionality to download and manage media from album URLs.
+It supports asynchronous downloads, database caching, and error handling.
+"""
 import asyncio
 import json
 import sys
