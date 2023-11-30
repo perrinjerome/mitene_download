@@ -343,7 +343,7 @@ def main() -> None:
         if selection.isdigit() and 1 <= int(selection) <= len(album_urls):
             album_url = album_urls[int(selection) - 1]
         else:
-            album_url = input("Enter a new album URL: ")
+            album_url = os.getenv("ALBUM_URL", "default_url")
             save_album_url(album_url)
     else:
         album_url = input("Enter the album URL: ")
