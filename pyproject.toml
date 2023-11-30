@@ -2,6 +2,9 @@
 requires = ["flit_core >=2,<4"]
 build-backend = "flit_core.buildapi"
 
+[tool.flit.module]
+name = "mitene_download"
+
 [project]
 name = "mitene_download"
 version = "4.0" 
