@@ -1,0 +1,61 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "mitene_download"
+version = "4.0" 
+requires-python = ">=3.6"
+dependencies  = [
+    "aiohttp[speedups]",
+    "argparse",
+    "tqdm",
+    "aiofiles"
+]
+classifiers = ["License :: OSI Approved :: MIT License"]
+readme = "README.md"
+dynamic = ["description"]
+
+[project.license]
+file = "LICENSE"  
+
+[project.urls]
+Source = "https://github.com/suasive93/mitene_download_4.0"
+
+[[project.authors]]
+name = "Jérome Perrin"
+
+[[project.authors]]
+name = "Suasive93"
+
+[tool.yapf]
+based_on_style = "pep8"
+indent_width = 2
+
+[tool.pylint.messages_control]
+disable = "all"
+enable = [
+    "E",
+    "unused-variable",
+    "unused-import",
+    "unreachable",
+    "duplicate-key",
+]
+
+[tool.tox]
+legacy_tox_ini = """
+    [tox]
+    isolated_build = True
+    package = wheel
+    env_list =
+        py312
+        py311
+        py310
+        py39
+
+    [testenv]
+    commands = mitene_download --help
+"""
+
+[project.scripts]
+mitene_download = "mitene_download:main"
