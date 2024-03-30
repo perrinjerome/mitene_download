@@ -1,6 +1,6 @@
 """Download medias from https://mitene.us/ or https://family-album.com/
 """
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 import argparse
 import asyncio
@@ -9,6 +9,7 @@ import glob
 import json
 import mimetypes
 import os
+import platform
 import sys
 import urllib.parse
 from typing import Awaitable
@@ -113,6 +114,8 @@ async def async_main() -> None:
             media.get("expiringVideoUrl",
                       media["expiringUrl"])).path.split("/")[-1]
         filename = f'{media["tookAt"]}-{filename}'
+        if platform.system() == 'Windows':
+          filename = filename.replace(':', '')
         if not os.path.splitext(filename)[1]:
           filename = filename + mimetypes.guess_extension(media['contentType'])
         destination_filename = os.path.join(
