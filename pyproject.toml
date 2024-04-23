@@ -43,6 +43,7 @@ legacy_tox_ini = """
         py311
         py310
         py39
+        py38
 
     [testenv]
     commands = mitene_download --help
