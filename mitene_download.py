@@ -134,7 +134,7 @@ async def async_main() -> None:
 
         if media["comments"]:
           comment_filename = os.path.splitext(destination_filename)[0] + ".md"
-          with open(comment_filename + ".tmp", "w") as comment_f:
+          with open(comment_filename + ".tmp", "w", encoding='utf-8') as comment_f:
             for comment in media["comments"]:
               if not comment["isDeleted"]:
                 comment_f.write(

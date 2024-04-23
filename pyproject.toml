@@ -29,6 +29,7 @@ enable = [
     "E",
     "unused-variable",
     "unused-import",
+    "unspecified-encoding",
     "unreachable",
     "duplicate-key",
 ]
