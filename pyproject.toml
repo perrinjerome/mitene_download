@@ -19,10 +19,6 @@ Source = "https://github.com/perrinjerome/mitene_download"
 [[project.authors]]
 name = "Jérome Perrin"
 
-[tool.yapf]
-based_on_style = "pep8"
-indent_width = 2
-
 [tool.pylint.messages_control]
 disable = "all"
 enable = [
@@ -33,6 +29,9 @@ enable = [
     "unreachable",
     "duplicate-key",
 ]
+
+[tool.ruff]
+indent-width = 2
 
 [tool.tox]
 legacy_tox_ini = """
