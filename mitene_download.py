@@ -32,21 +32,34 @@ async def download_media(
   session: aiohttp.ClientSession,
   url: str,
   destination_filename: str,
-  media_name: str,
+  media: dict,
   verbose: bool,
 ) -> None:
   """Download one media from URL"""
   if not os.path.exists(destination_filename):
     if verbose:
-      print(f"Downloading {media_name} ⏳", flush=True)
+      print(f"Downloading {media['uuid']} ⏳", flush=True)
     with open(destination_filename + ".tmp", "wb") as f:
       r = await session.get(url)
       r.raise_for_status()
       async for chunk in r.content.iter_chunked(1024):
         f.write(chunk)
     os.rename(destination_filename + ".tmp", destination_filename)
+    if media["comments"]:
+        await save_comments(destination_filename, media["comments"])
   elif verbose:
-    print(f"{media_name} already downloaded ✔️", flush=True)
+    print(f"{media['uuid']} already downloaded ✔️", flush=True)
+
+
+async def save_comments(destination_filename: str, comments: list) -> None:
+  comment_filename = os.path.splitext(destination_filename)[0] + ".md"
+  with open(comment_filename + ".tmp", "w", encoding="utf-8") as comment_f:
+    for comment in comments:
+      if not comment["isDeleted"]:
+        comment_f.write(
+          f'**{comment["user"]["nickname"]}**: {comment["body"]}\n\n'
+        )
+  os.rename(comment_filename + ".tmp", comment_filename)
 
 
 async def async_main() -> None:
@@ -129,20 +142,10 @@ async def async_main() -> None:
             session,
             f"{args.album_url}/media_files/{media['uuid']}/download",
             destination_filename,
-            media["uuid"],
+            media,
             args.verbose,
           )
         )
-
-        if media["comments"]:
-          comment_filename = os.path.splitext(destination_filename)[0] + ".md"
-          with open(comment_filename + ".tmp", "w", encoding="utf-8") as comment_f:
-            for comment in media["comments"]:
-              if not comment["isDeleted"]:
-                comment_f.write(
-                  f'**{comment["user"]["nickname"]}**: {comment["body"]}\n\n'
-                )
-          os.rename(comment_filename + ".tmp", comment_filename)
 
     await gather_with_concurrency(4, *download_coroutines)
   await session.close()
