@@ -1,6 +1,6 @@
 """Download medias from https://mitene.us/ or https://family-album.com/"""
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 import argparse
 import asyncio
@@ -9,6 +9,7 @@ import glob
 import json
 import mimetypes
 import os
+import pathlib
 import platform
 import sys
 import urllib.parse
@@ -135,14 +136,17 @@ async def async_main() -> None:
         )
 
         if media["comments"]:
-          comment_filename = os.path.splitext(destination_filename)[0] + ".md"
-          with open(comment_filename + ".tmp", "w", encoding="utf-8") as comment_f:
-            for comment in media["comments"]:
-              if not comment["isDeleted"]:
-                comment_f.write(
-                  f'**{comment["user"]["nickname"]}**: {comment["body"]}\n\n'
-                )
-          os.rename(comment_filename + ".tmp", comment_filename)
+          comment_text = "".join(
+            f'**{comment["user"]["nickname"]}**: {comment["body"]}\n\n'
+            for comment in media["comments"]
+            if not comment["isDeleted"]
+          )
+          comment_file = pathlib.Path(os.path.splitext(destination_filename)[0] + ".md")
+          if not (
+            comment_file.exists()
+            and comment_file.read_text(encoding="utf-8") == comment_text
+          ):
+            comment_file.write_text(comment_text, encoding="utf-8")
 
     await gather_with_concurrency(4, *download_coroutines)
   await session.close()
