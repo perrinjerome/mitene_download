@@ -10,7 +10,6 @@ import json
 import mimetypes
 import os
 import pathlib
-import platform
 import sys
 import urllib.parse
 from typing import Awaitable
@@ -72,6 +71,12 @@ async def async_main() -> None:
   for tmp_file in glob.glob(os.path.join(args.destination_directory, "*.tmp")):
     os.unlink(tmp_file)
 
+  # migrate from the old file naming
+  for old_name in glob.glob(os.path.join(args.destination_directory, "*:*")):
+    new_name = old_name.replace(":", "")
+    os.rename(old_name, new_name)
+    print(f"Renamed {old_name} to {new_name}")
+
   download_coroutines = []
   async with aiohttp.ClientSession(
     timeout=aiohttp.ClientTimeout(total=datetime.timedelta(minutes=30).total_seconds())
@@ -115,9 +120,7 @@ async def async_main() -> None:
         filename = urllib.parse.urlparse(
           media.get("expiringVideoUrl", media["expiringUrl"])
         ).path.split("/")[-1]
-        filename = f'{media["tookAt"]}-{filename}'
-        if platform.system() == "Windows":
-          filename = filename.replace(":", "")
+        filename = f'{media["tookAt"]}-{filename}'.replace(":", "")
         if not os.path.splitext(filename)[1]:
           filename = filename + mimetypes.guess_extension(media["contentType"])
         destination_filename = os.path.join(
