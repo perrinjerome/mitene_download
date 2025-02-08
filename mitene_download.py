@@ -63,8 +63,10 @@ async def async_main() -> None:
   parser.add_argument("--destination-directory", default="out")
   parser.add_argument("-p", "--password")
   parser.add_argument("-v", "--verbose", action="store_true")
-  parser.add_argument("--nocomments", action="store_true", help="Skip downloading comment files (.md).")
-  
+  parser.add_argument(
+    "--nocomments", action="store_true", help="Skip downloading comment files (.md)."
+  )
+
   args = parser.parse_args()
 
   os.makedirs(args.destination_directory, exist_ok=True)
@@ -121,7 +123,7 @@ async def async_main() -> None:
         filename = urllib.parse.urlparse(
           media.get("expiringVideoUrl", media["expiringUrl"])
         ).path.split("/")[-1]
-        filename = f'{media["tookAt"]}-{filename}'.replace(":", "")
+        filename = f"{media['tookAt']}-{filename}".replace(":", "")
         if not os.path.splitext(filename)[1]:
           filename = filename + mimetypes.guess_extension(media["contentType"])
         destination_filename = os.path.join(
@@ -141,7 +143,7 @@ async def async_main() -> None:
 
         if not args.nocomments and media["comments"]:
           comment_text = "".join(
-            f'**{comment["user"]["nickname"]}**: {comment["body"]}\n\n'
+            f"**{comment['user']['nickname']}**: {comment['body']}\n\n"
             for comment in media["comments"]
             if not comment["isDeleted"]
           )
