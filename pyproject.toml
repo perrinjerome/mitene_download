@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "mitene_download"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = ["aiohttp[speedups]"]
 classifiers = ["License :: OSI Approved :: MIT License"]
 readme = "README.md"
@@ -44,7 +44,6 @@ legacy_tox_ini = """
         py311
         py310
         py39
-        py38
 
     [testenv]
     commands = mitene_download --help
