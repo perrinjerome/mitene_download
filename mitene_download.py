@@ -111,7 +111,7 @@ async def async_main() -> None:
           sys.exit(1)
         continue
 
-      page_text = response_text.split("//<![CDATA[\nwindow.gon={};gon.media=")[1].split(
+      page_text = response_text.split(";gon.media=")[1].split(
         ";gon.familyUserIdToColorMap="
       )[0]
       data = json.loads(page_text)
