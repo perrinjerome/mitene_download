@@ -1,6 +1,6 @@
 """Download medias from https://mitene.us/ or https://family-album.com/"""
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 import argparse
 import asyncio
