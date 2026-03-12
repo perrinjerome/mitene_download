@@ -10,6 +10,6 @@ Run the script with `mitene_download https://mitene.us/f/abcd123456`, using the 
  
 This will download all photos and video in `out` folder. Some text files will be created with the comments.
 
-If the album is password-protected, you can specify the password using `--password` command line argument, similar to this: `mitene_download https://mitene.us/f/abcd123456 --password the_password`.
+If the album is password-protected, the script will prompt you to enter the password securely (input is hidden). You can also specify the password using `--password` command line argument, similar to this: `mitene_download https://mitene.us/f/abcd123456 --password the_password`; however this is unsafe and should be avoided, as the password may be visible in shell history, process lists, or logs.
 
 To exclude comments (MD files) use the `--nocomments` command line argument, similar to this: `mitene_download https://mitene.us/f/abcd123456 --nocomments`

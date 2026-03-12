@@ -10,6 +10,7 @@ import json
 import mimetypes
 import os
 import pathlib
+import getpass
 import sys
 import urllib.parse
 from typing import Awaitable
@@ -90,11 +91,18 @@ async def async_main() -> None:
       response_text = await r.text()
       if page == 1 and "Please enter your password" in response_text:
         if not args.password:
-          print(
-            "Album is password protected, please specify password with --password",
-            file=sys.stderr,
-          )
-          sys.exit(1)
+          try:
+            args.password = getpass.getpass("Album is password protected. Enter password: ")
+          except (EOFError, KeyboardInterrupt):
+            print(file=sys.stderr)
+            print(
+              "Cannot read password from terminal, please specify password with --password",
+              file=sys.stderr,
+            )
+            sys.exit(1)
+          if not args.password:
+            print("Password cannot be empty", file=sys.stderr)
+            sys.exit(1)
         authenticity_token = response_text.split('name="authenticity_token" value="')[
           1
         ].split('"')[0]
