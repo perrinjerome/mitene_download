@@ -5,12 +5,12 @@ __version__ = "0.6.0"
 import argparse
 import asyncio
 import datetime
+import getpass
 import glob
 import json
 import mimetypes
 import os
 import pathlib
-import getpass
 import sys
 import urllib.parse
 from typing import Awaitable
@@ -92,7 +92,9 @@ async def async_main() -> None:
       if page == 1 and "Please enter your password" in response_text:
         if not args.password:
           try:
-            args.password = getpass.getpass("Album is password protected. Enter password: ")
+            args.password = getpass.getpass(
+              "Album is password protected. Enter password: "
+            )
           except (EOFError, KeyboardInterrupt):
             print(file=sys.stderr)
             print(
